@@ -2,6 +2,7 @@
 Automation Testing Katalon Studio
 
 -- Cara Menjalankan Katalon --
+
 Berikut ini ada 2 cara dalam menjalankan test case dari katalon studio:
 1. Test Case : Untuk menjalankan 1 case secara tunggal, tanpa generate report
 	- Buka test case
