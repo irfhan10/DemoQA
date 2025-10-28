@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Negative - Submit form tanpa input last name</description>
+   <name>TC003</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>df0f5032-350b-4ff6-8fb1-8b21a2b8f852</testCaseGuid>
+</TestCaseEntity>

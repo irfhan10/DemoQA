@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Negative - Input email dengan data yang tidak valid (format tidak valid) &amp; submit</description>
+   <name>TC004</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>1ae9de6f-6772-4a65-a8c8-e38040d3d17b</testCaseGuid>
+</TestCaseEntity>

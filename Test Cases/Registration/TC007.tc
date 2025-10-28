@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Negative - Input field mobile number dengan kombinasi angka, huruf &amp; submit</description>
+   <name>TC007</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>def0b7b3-6b89-4166-8a90-b4f07bd31c6c</testCaseGuid>
+</TestCaseEntity>

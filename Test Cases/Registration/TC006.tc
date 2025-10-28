@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Negative - Input field mobile number kurang dari 10 karakter &amp; submit</description>
+   <name>TC006</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>3735642f-7b2d-4720-bff3-9994ee76ac35</testCaseGuid>
+</TestCaseEntity>

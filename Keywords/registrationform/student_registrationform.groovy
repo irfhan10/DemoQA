@@ -1,4 +1,4 @@
-package registration
+package registrationform
 
 import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
@@ -37,20 +37,39 @@ public class student_registrationform {
 
 
 	@Keyword
+	def verifyURL(String expectedURL) {
+		try {
+			String currentURL = WebUI.getUrl()
+			if (currentURL == expectedURL) {
+				KeywordUtil.markPassed("URL sesuai: " + currentURL)
+			} else {
+				KeywordUtil.markFailed("URL tidak sesuai.\nExpected: ${expectedURL}\nActual: ${currentURL}")
+			}
+		} catch (Exception e) {
+			KeywordUtil.markFailed("Gagal memverifikasi URL. Error: " + e.message)
+		}
+	}
+
+
+
+	@Keyword
 	def InputField(String value, String objectPath, String fieldName = "Field") {
 		try {
 			// Ambil object dari repository
 			TestObject inputField = findTestObject(objectPath)
 			// Input value (STOP_ON_FAILURE kalau gagal)
 			WebUI.setText(inputField, value, FailureHandling.STOP_ON_FAILURE)
-			// Menampilkan log informasi di console (berhasil)
-			KeywordUtil.logInfo("${fieldName} berhasil diisi : " + value)
-			KeywordUtil.markPassed("Berhasil Input ${fieldName}")
+
+			// Assertion nilai field sesuai yang diinput
+			WebUI.verifyElementAttributeValue(inputField, 'value', value, 5)
+
+			KeywordUtil.logInfo("${fieldName} berhasil diisi dan diverifikasi: " + value)
+			KeywordUtil.markPassed("Berhasil Input & Verifikasi ${fieldName}")
 		} catch (Exception e) {
-			// Menampilkan log informasi di console (gagal) lalu stop test
 			KeywordUtil.markFailedAndStop("Gagal Input ${fieldName}. Error : " + e.message)
 		}
 	}
+
 
 
 	@Keyword
@@ -70,24 +89,6 @@ public class student_registrationform {
 	}
 
 
-	//	@Keyword
-	//	def setDate(String dateValue, String objectPath, String inputFormat = "dd-MM-yyyy", String outputFormat = "dd MMM yyyy") {
-	//		try {
-	//			// Parsing: ubah string jadi Date
-	//			Date date = new SimpleDateFormat(inputFormat, Locale.ENGLISH).parse(dateValue)
-	//			// Formatting: ubah Date ke format yang dibutuhkan UI
-	//			String formattedDate = new SimpleDateFormat(outputFormat, Locale.ENGLISH).format(date)
-	//			// Input ke field
-	//			TestObject dateField = findTestObject(objectPath)
-	//			WebUI.clearText(dateField)
-	//			WebUI.setText(dateField, formattedDate)
-	//			// Menampilkan log informasi di console
-	//			KeywordUtil.logInfo("Tanggal berhasil diinput : " + formattedDate)
-	//		} catch (Exception e) {
-	//			KeywordUtil.markFailed("Gagal input tanggal : " + e.message)
-	//		}
-	//	}
-
 
 	@Keyword
 	def selectSubjects(String values, String objectPath) {
@@ -103,50 +104,65 @@ public class student_registrationform {
 				// Input subject dan enter
 				WebUI.setText(inputField, subject)
 				WebUI.sendKeys(inputField, Keys.chord(Keys.ENTER))
-				// Menampilkan log informasi di console
 				KeywordUtil.logInfo("Berhasil pilih subject : " + subject)
+
+				// Assertion subject saat muncul di field
+				TestObject subjectTag = new TestObject().addProperty("xpath",
+						ConditionType.EQUALS, "//div[contains(@class,'subjects-auto-complete__multi-value__label') and text()='" + subject + "']")
+				WebUI.verifyElementPresent(subjectTag, 5)
+				KeywordUtil.logInfo("Verifikasi subject muncul: " + subject)
 			}
-			// Log selesai
+
 			KeywordUtil.markPassed("Semua subjects berhasil diinput : " + values)
 		} catch (Exception e) {
-			// Log gagal + stop test
 			KeywordUtil.markFailedAndStop("Gagal input subjects. Error : " + e.message)
 		}
 	}
 
 
+
 	@Keyword
 	def selectHobby(String hobbyValue) {
-		// Pisahkan jika hobi lebih dari satu
-		def hobbies = hobbyValue.split(",")
-		// Hapus spasi di awal/akhir teks
-		hobbies = hobbies*.trim()
+		// Pisahkan jika hobi lebih dari satu dan Hapus spasi di awal/akhir teks
+		def hobbies = hobbyValue.split(",")*.trim()
 		// Perulangan untuk hobi, jika lebih dari satu
 		hobbies.each { hobby ->
-			TestObject checkbox = null
-			// Mencocokkan pilihan hobi
+			TestObject labelObj = null
+			TestObject inputObj = null
+
 			switch(hobby) {
 				case "Sports":
-					checkbox = findTestObject('Registration/hobbies_Sport')
+					labelObj = findTestObject('Registration/hobbies_Sport')
+					inputObj = findTestObject('Registration/klik_hobbies_Sport')
 					break
 				case "Reading":
-					checkbox = findTestObject('Registration/hobbies_Reading')
+					labelObj = findTestObject('Registration/hobbies_Reading')
+					inputObj = findTestObject('Registration/klik_hobbies_Reading')
 					break
 				case "Music":
-					checkbox = findTestObject('Registration/hobbies_Music')
+					labelObj = findTestObject('Registration/hobbies_Music')
+					inputObj = findTestObject('Registration/klik_hobbies_Music')
 					break
 				default:
-					KeywordUtil.logInfo("Hobby tidak dikenal : " + hobby)
+					KeywordUtil.markWarning("Hobby tidak dikenal : " + hobby)
+					return
 			}
 			// Jika hobi ada dalam pilihan
-			if (checkbox != null) {
-				if (!WebUI.verifyElementChecked(checkbox, 1, FailureHandling.OPTIONAL)) {
-					WebUI.click(checkbox)
-					KeywordUtil.logInfo(hobby + " Berhasil dicentang")
+			if (labelObj != null && inputObj != null) {
+				def isChecked = WebUI.getAttribute(inputObj, 'checked')
+
+				if (isChecked == null) {
+					WebUI.click(labelObj)
+					WebUI.delay(1)
+					WebUI.verifyElementChecked(inputObj, 5)
+					KeywordUtil.markPassed("Checkbox '${hobby}' berhasil dipilih.")
+				} else {
+					KeywordUtil.logInfo("Checkbox '${hobby}' sudah dipilih.")
 				}
 			}
 		}
 	}
+
 
 
 	@Keyword
@@ -165,6 +181,7 @@ public class student_registrationform {
 			KeywordUtil.markFailed("Upload file gagal. Error : " + e.message)
 		}
 	}
+
 
 
 	@Keyword
@@ -187,6 +204,7 @@ public class student_registrationform {
 	}
 
 
+
 	@Keyword
 	def takeScreenshot() {
 		// Get lokasi direktori
@@ -202,16 +220,32 @@ public class student_registrationform {
 	}
 
 
-	//	@Keyword
-	//	def takeScreenshotWithName(String fileName) {
-	//		// Get lokasi direktori
-	//		String projectDir = RunConfiguration.getProjectDir()
-	//		// Menentukan lokasi folder
-	//		String path = projectDir + "/Screenshots/" + fileName + ".png"
-	//		// Mengambil screenshot
-	//		WebUI.takeScreenshot(path)
-	//		// Menampilkan log informasi di console
-	//		println "Screenshot tersimpan di : " + path
-	//	}
+
+	@Keyword
+	def verifikasiModalTampil() {
+		// Verifikasi popup sukses tidak muncul
+		boolean isModalPresent = WebUI.verifyElementPresent(findTestObject('Registration/modal_thanks_for_submit'), 3, FailureHandling.OPTIONAL)
+
+		if (isModalPresent) {
+			KeywordUtil.markPassed("Modal Thanks for submitting the form tampil")
+		} else {
+			KeywordUtil.markFailed("Modal Thanks for submitting the form tidak tampil")
+		}
+		WebUI.verifyTextPresent('Thanks for submitting the form', false)
+	}
+
+
+
+	@Keyword
+	def verifikasiModalTidakTampil() {
+		// Verifikasi popup sukses tidak muncul
+		boolean isModalNotPresent = WebUI.verifyElementNotPresent(findTestObject('Registration/modal_thanks_for_submit'), 3, FailureHandling.OPTIONAL)
+
+		if (isModalNotPresent) {
+			KeywordUtil.markPassed("Modal Thanks for submitting the form tidak tampil")
+		} else {
+			KeywordUtil.markFailed("Modal Thanks for submitting the form tampil")
+		}
+	}
 }
 
