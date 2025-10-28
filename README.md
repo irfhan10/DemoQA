@@ -6,14 +6,14 @@ Automation Testing Katalon Studio
 Berikut ini ada 2 cara dalam menjalankan test case dari katalon studio:
 1. Test Case : Untuk menjalankan 1 case secara tunggal, tanpa generate report
 	- Buka test case
-	- Klik tombol run pada test case
+	- Click tombol run pada test case
 	- Pilih browser
 	- Tunggu sampai proses selesai
 
 2. Test Suite : Untuk menjalankan beberapa Test Case sekaligus, dan akan menghasilkan report
 	- Create New Test Suite
-	- Klik add, tambahkan beberapa test case
-	- Klik tombol run pada test case
+	- Click add, tambahkan beberapa test case
+	- Click tombol run pada test case
 	- Pilih browser
 	- Katalon akan menjalankan semua test case secara berurutan
 	- Tunggu sampai proses selesai
