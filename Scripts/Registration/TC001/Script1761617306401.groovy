@@ -17,7 +17,7 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 import com.kms.katalon.core.configuration.RunConfiguration as RunConfiguration
-import com.kms.katalon.core.util.KeywordUtil
+import com.kms.katalon.core.util.KeywordUtil as KeywordUtil
 
 WebUI.callTestCase(findTestCase('Registration/RegistrationForm/RegistrationScreen'), [:], FailureHandling.OPTIONAL)
 
@@ -44,8 +44,6 @@ CustomKeywords.'registrationform.student_registrationform.SelectGender'(gender)
 String mobile = data.getValue('mobile_user', 1)
 
 CustomKeywords.'registrationform.student_registrationform.InputField'(mobile, 'Registration/UserNumber')
-
-WebUI.click(findTestObject('Registration/Subjects'))
 
 String subjects = data.getValue('subjects_user', 1)
 
@@ -77,7 +75,9 @@ CustomKeywords.'registrationform.student_registrationform.takeScreenshot'()
 
 WebUI.click(findTestObject('Registration/button_Submit'))
 
-CustomKeywords.'registrationform.student_registrationform.verifikasiModalTampil'()
+WebUI.delay(5)
+
+CustomKeywords.'registrationform.student_registrationform.verifikasiModalThanks'()
 
 WebUI.delay(5)
 
@@ -85,7 +85,7 @@ CustomKeywords.'registrationform.student_registrationform.takeScreenshot'()
 
 WebUI.delay(5)
 
-WebUI.click(findTestObject('Registration/button_closeModal'))
+CustomKeywords.'registrationform.student_registrationform.handleModal'()
 
 WebUI.closeBrowser()
 

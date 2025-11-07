@@ -23,51 +23,27 @@ WebUI.callTestCase(findTestCase('Registration/RegistrationForm/RegistrationScree
 
 WebUI.delay(5)
 
-def data = findTestData('TestDataStudentRegistration')
+CustomKeywords.'registrationform.student_registrationform.InputField'(first_name, 'Registration/FirstName')
 
-String firstName = data.getValue('first_name', 6)
+CustomKeywords.'registrationform.student_registrationform.InputField'(last_name, 'Registration/LastName')
 
-CustomKeywords.'registrationform.student_registrationform.InputField'(firstName, 'Registration/FirstName')
+CustomKeywords.'registrationform.student_registrationform.InputField'(email_user, 'Registration/UserEmail')
 
-String lastName = data.getValue('last_name', 6)
+CustomKeywords.'registrationform.student_registrationform.SelectGender'(gender_user)
 
-CustomKeywords.'registrationform.student_registrationform.InputField'(lastName, 'Registration/LastName')
+CustomKeywords.'registrationform.student_registrationform.InputField'(mobile_user, 'Registration/UserNumber')
 
-String email = data.getValue('email_user', 6)
+CustomKeywords.'registrationform.student_registrationform.selectSubjects'(subjects_user, 'Registration/Subjects')
 
-CustomKeywords.'registrationform.student_registrationform.InputField'(email, 'Registration/UserEmail')
+CustomKeywords.'registrationform.student_registrationform.selectHobby'(hobbies_user)
 
-String gender = data.getValue('gender_user', 6)
+CustomKeywords.'registrationform.student_registrationform.uploadFile'(findTestObject('Registration/UploadPicture'), picture_user)
 
-CustomKeywords.'registrationform.student_registrationform.SelectGender'(gender)
+CustomKeywords.'registrationform.student_registrationform.InputField'(address_user, 'Registration/CurrentAddress')
 
-String mobile = data.getValue('mobile_user', 6)
+CustomKeywords.'registrationform.student_registrationform.selectDropdown'(state_user, 'Registration/State')
 
-CustomKeywords.'registrationform.student_registrationform.InputField'(mobile, 'Registration/UserNumber')
-
-String subjects = data.getValue('subjects_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.selectSubjects'(subjects, 'Registration/Subjects')
-
-String hobbies = data.getValue('hobbies_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.selectHobby'(hobbies)
-
-def filePath = findTestData('TestDataStudentRegistration').getValue('picture_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.uploadFile'(findTestObject('Registration/UploadPicture'), filePath)
-
-String address = data.getValue('address_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.InputField'(address, 'Registration/CurrentAddress')
-
-String state = data.getValue('state_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.selectDropdown'(state, 'Registration/State')
-
-String city = data.getValue('city_user', 6)
-
-CustomKeywords.'registrationform.student_registrationform.selectDropdown'(city, 'Registration/City')
+CustomKeywords.'registrationform.student_registrationform.selectDropdown'(city_user, 'Registration/City')
 
 WebUI.delay(5)
 

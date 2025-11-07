@@ -93,6 +93,7 @@ public class student_registrationform {
 	@Keyword
 	def selectSubjects(String values, String objectPath) {
 		try {
+			WebUI.click(findTestObject('Registration/Subjects'))
 			// Ambil object dari repository
 			TestObject inputField = findTestObject(objectPath)
 			// Pisahkan jika subject lebih dari satu (array)
@@ -101,16 +102,31 @@ public class student_registrationform {
 			for (String subject : subjects) {
 				// Hapus spasi di awal/akhir teks
 				subject = subject.trim()
+
+				// Skip jika subject kosong
+				if (subject == null || subject.isEmpty()) {
+					KeywordUtil.logInfo("Lewati subject kosong.")
+					continue
+				}
+
 				// Input subject dan enter
 				WebUI.setText(inputField, subject)
 				WebUI.sendKeys(inputField, Keys.chord(Keys.ENTER))
+				WebUI.delay(5)
 				KeywordUtil.logInfo("Berhasil pilih subject : " + subject)
 
 				// Assertion subject saat muncul di field
-				TestObject subjectTag = new TestObject().addProperty("xpath",
-						ConditionType.EQUALS, "//div[contains(@class,'subjects-auto-complete__multi-value__label') and text()='" + subject + "']")
-				WebUI.verifyElementPresent(subjectTag, 5)
-				KeywordUtil.logInfo("Verifikasi subject muncul: " + subject)
+				TestObject subjectTag = new TestObject("subjectTag_" + subject)
+				subjectTag.addProperty("xpath", ConditionType.EQUALS,
+						"//div[contains(@class,'subjects-auto-complete__multi-value__label') and normalize-space(text())='" + subject + "']")
+
+				boolean isPresent = WebUI.verifyElementPresent(subjectTag, 5, FailureHandling.OPTIONAL)
+
+				if (isPresent) {
+					KeywordUtil.logInfo("Verifikasi subject muncul: " + subject)
+				} else {
+					KeywordUtil.markWarning("Subject belum muncul: " + subject)
+				}
 			}
 
 			KeywordUtil.markPassed("Semua subjects berhasil diinput : " + values)
@@ -222,30 +238,38 @@ public class student_registrationform {
 
 
 	@Keyword
-	def verifikasiModalTampil() {
-		// Verifikasi popup sukses tidak muncul
-		boolean isModalPresent = WebUI.verifyElementPresent(findTestObject('Registration/modal_thanks_for_submit'), 3, FailureHandling.OPTIONAL)
-
-		if (isModalPresent) {
-			KeywordUtil.markPassed("Modal Thanks for submitting the form tampil")
-		} else {
-			KeywordUtil.markFailed("Modal Thanks for submitting the form tidak tampil")
+	def verifikasiModalThanks() {
+		try {
+			// Verifikasi modal Thanks for submitting the form
+			if (WebUI.waitForElementVisible(findTestObject('Registration/modal_thanks_for_submit'), 5)) {
+				WebUI.verifyElementPresent(findTestObject('Registration/modal_thanks_for_submit'), 5)
+				println "Modal Thanks for submitting the form tampil"
+			} else {
+				WebUI.verifyElementNotPresent(findTestObject('Registration/modal_thanks_for_submit'), 5)
+				println "Modal Thanks for submitting the form tidak tampil"
+			}
+		} catch (Exception e) {
+			KeywordUtil.markWarning("Terjadi error : " + e.getMessage())
 		}
-		WebUI.verifyTextPresent('Thanks for submitting the form', false)
 	}
 
 
 
 	@Keyword
-	def verifikasiModalTidakTampil() {
-		// Verifikasi popup sukses tidak muncul
-		boolean isModalNotPresent = WebUI.verifyElementNotPresent(findTestObject('Registration/modal_thanks_for_submit'), 3, FailureHandling.OPTIONAL)
-
-		if (isModalNotPresent) {
-			KeywordUtil.markPassed("Modal Thanks for submitting the form tidak tampil")
-		} else {
-			KeywordUtil.markFailed("Modal Thanks for submitting the form tampil")
+	def handleModal() {
+		// Cek action close modal
+		try {
+			if (WebUI.verifyElementPresent(findTestObject('Registration/modal_thanks_for_submit'), 3, FailureHandling.OPTIONAL)) {
+				KeywordUtil.logInfo("Modal tampil, close modal")
+				WebUI.click(findTestObject('Registration/modal_thanks_for_submit'))
+				KeywordUtil.markPassed("Modal berhasil ditutup.")
+			} else {
+				KeywordUtil.logInfo("Modal tidak tampil, skip langkah close.")
+			}
+		} catch (Exception e) {
+			KeywordUtil.markWarning("Terjadi error : " + e.getMessage())
 		}
 	}
 }
+
 

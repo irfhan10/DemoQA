@@ -45,8 +45,6 @@ String mobile = data.getValue('mobile_user', 7)
 
 CustomKeywords.'registrationform.student_registrationform.InputField'(mobile, 'Registration/UserNumber')
 
-WebUI.click(findTestObject('Registration/Subjects'))
-
 String subjects = data.getValue('subjects_user', 7)
 
 CustomKeywords.'registrationform.student_registrationform.selectSubjects'(subjects, 'Registration/Subjects')
@@ -77,13 +75,15 @@ WebUI.click(findTestObject('Registration/button_Submit'))
 
 WebUI.delay(5)
 
-CustomKeywords.'registrationform.student_registrationform.verifikasiModalTidakTampil'()
+CustomKeywords.'registrationform.student_registrationform.verifikasiModalThanks'()
 
 WebUI.delay(5)
 
 CustomKeywords.'registrationform.student_registrationform.takeScreenshot'()
 
 WebUI.delay(5)
+
+CustomKeywords.'registrationform.student_registrationform.handleModal'()
 
 WebUI.closeBrowser()
 

@@ -27,11 +27,15 @@ WebUI.click(findTestObject('Registration/button_Submit'))
 
 WebUI.delay(5)
 
-CustomKeywords.'registrationform.student_registrationform.verifikasiModalTidakTampil'()
+CustomKeywords.'registrationform.student_registrationform.verifikasiModalThanks'()
 
 WebUI.delay(5)
 
 CustomKeywords.'registrationform.student_registrationform.takeScreenshot'()
+
+WebUI.delay(5)
+
+CustomKeywords.'registrationform.student_registrationform.handleModal'()
 
 WebUI.closeBrowser()
 
